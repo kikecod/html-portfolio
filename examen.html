@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Contraseña y Generación de Matriz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+            gap: 5px;
+        }
+        .matrix div {
+            background-color: #ddd;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Validar Contraseña</h2>
+        <input type="text" id="password" placeholder="Ingrese su contraseña">
+        <button onclick="validar()">Validar</button>
+        <div class="result" id="passwordResult"></div>
+
+        <h2>Generar Matriz</h2>
+        <input type="number" id="matrixSize" placeholder="Ingrese el tamaño de la matriz">
+        <button onclick="generar()">Generar</button>
+        <div class="result" id="matrixResult"></div>
+    </div>
+
+    <script>
+        function validarContrasena(contrasena) {
+            if (contrasena.length !== 8) {
+                return "inválida";
+            }
+            const mayuscula = /[A-Z]/;
+            if (!mayuscula.test(contrasena)) {
+                return "inválida";
+            }
+            const numero = /\d/;
+            if (!numero.test(contrasena)) {
+                return "inválida";
+            }
+            const simbolo = /[!@#\$%\^\&*\)\(+=._-]/;
+            if (!simbolo.test(contrasena)) {
+                return "inválida";
+            }
+            return "válida";
+        }
+
+        function validar() {
+            let contrasena = document.getElementById("password").value;
+            let resultado = validarContrasena(contrasena);
+            document.getElementById("passwordResult").textContent = "La contraseña es " + resultado;
+        }
+
+        function generarMatriz(n) {
+            let matriz = [];
+            for (let i = 0; i < n; i++) {
+                matriz[i] = [];
+                for (let j = 0; j < n; j++) {
+                    matriz[i][j] = Math.min(i, j, n - i - 1, n - j - 1) + 1;
+                }
+            }
+            return matriz;
+        }
+
+        function generar() {
+            let n = parseInt(document.getElementById("matrixSize").value);
+            if (isNaN(n) || n <= 0) {
+                document.getElementById("matrixResult").textContent = "Por favor, ingrese un tamaño válido.";
+                return;
+            }
+            let matriz = generarMatriz(n);
+            let resultado = document.getElementById("matrixResult");
+            resultado.innerHTML = "";
+            let matrixContainer = document.createElement("div");
+            matrixContainer.className = "matrix";
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    let cell = document.createElement("div");
+                    cell.textContent = matriz[i][j];
+                    matrixContainer.appendChild(cell);
+                }
+            }
+            resultado.appendChild(matrixContainer);
+        }
+    </script>
+</body>
+</html>
